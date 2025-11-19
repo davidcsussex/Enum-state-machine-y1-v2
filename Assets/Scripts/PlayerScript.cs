@@ -63,7 +63,7 @@ public class PlayerScript : MonoBehaviour
         {
             // simulate jump
             state = States.Jump;
-            rb.velocity = new Vector3( 0,10,0);
+            rb.linearVelocity = new Vector3( 0,10,0);
         }
 
         if( Input.GetKey("left"))
@@ -95,10 +95,10 @@ public class PlayerScript : MonoBehaviour
 
     void PlayerWalk()
     {
-        rb.velocity = Vector3.ClampMagnitude(rb.velocity, 5f);
+        rb.linearVelocity = Vector3.ClampMagnitude(rb.linearVelocity, 5f);
 
         //magnitude = the player's speed
-        float magnitude = rb.velocity.magnitude;
+        float magnitude = rb.linearVelocity.magnitude;
 
         rb.AddForce(transform.forward * 5f);
     }
