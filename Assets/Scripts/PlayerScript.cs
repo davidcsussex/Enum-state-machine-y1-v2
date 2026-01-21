@@ -17,7 +17,7 @@ public class PlayerScript : MonoBehaviour
 
 
     Rigidbody rb;
-    bool grounded;
+    public bool grounded;
 
     // Start is called before the first frame update
     void Start()
@@ -32,9 +32,10 @@ public class PlayerScript : MonoBehaviour
         DoLogic();
     }
 
-    void FixedUpdate()
+    private void LateUpdate()
     {
-        grounded=false;
+        grounded = false;
+
     }
 
 
@@ -44,7 +45,7 @@ public class PlayerScript : MonoBehaviour
         {
             PlayerIdle();
         }
-
+        
         if( state == States.Jump )
         {
             PlayerJumping();
@@ -95,12 +96,14 @@ public class PlayerScript : MonoBehaviour
 
     void PlayerWalk()
     {
-        rb.linearVelocity = Vector3.ClampMagnitude(rb.linearVelocity, 5f);
+        Vector3 vel;
 
         //magnitude = the player's speed
         float magnitude = rb.linearVelocity.magnitude;
 
-        rb.AddForce(transform.forward * 5f);
+        //move forward and preserve original y velocity
+        vel = transform.forward * 5f;
+        rb.linearVelocity = new Vector3(vel.x, rb.linearVelocity.y, vel.z);
     }
 
 
@@ -114,10 +117,16 @@ public class PlayerScript : MonoBehaviour
     }
 
 
+    //Output debug info to canvas
     private void OnGUI()
     {
+        float mag = rb.linearVelocity.magnitude;
+
+        mag = Mathf.Round(mag*100)/100;
+
         //debug text
         string text = "Left/Right arrows = Rotate\nSpace = Jump\nUp Arrow = Forward\nCurrent state=" + state;
+        text += "\nmag=" + mag;
 
         // define debug text area
         GUILayout.BeginArea(new Rect(10f, 450f, 1600f, 1600f));
